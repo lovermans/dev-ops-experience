@@ -1,0 +1,1 @@
+Work with Laragon v6.0.0. Best performance with laravel  octane roadrunner server fastcgi mode or laravel octane roadrunner server reverse proxy mode (generally used to run laravel projects in subfolders).
