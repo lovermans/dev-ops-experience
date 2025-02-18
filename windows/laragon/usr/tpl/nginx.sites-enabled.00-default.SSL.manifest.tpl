@@ -10,6 +10,10 @@ server {
     # Access Restrictions
     allow       all;
     #deny        all;
+
+    if ($request_uri ~* "^(.*/)index\.php/*(.*)") {
+		return 301 $1$2;
+	}
  
     include "<<LARAGON_ROOT>>/etc/nginx/alias/*.conf";
 

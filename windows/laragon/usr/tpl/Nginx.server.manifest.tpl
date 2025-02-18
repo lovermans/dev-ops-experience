@@ -4,6 +4,10 @@ server {
     root "<<PROJECT_DIR>>";
     
     index index.html index.htm index.php;
+
+    if ($request_uri ~* "^(.*/)index\.php/*(.*)") {
+		return 301 $1$2;
+	}
  
     location ~* (.+)(\.)(css|js|webp|jpg|png|ico|svg|woff2)(.*) {
 		try_files $1$2$3 /index.php$is_args$args;
