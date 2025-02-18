@@ -26,7 +26,6 @@ server {
 		fastcgi_keep_conn on;
     }
     
-    # Enable SSL
     ssl_certificate "<<LARAGON_ROOT>>/etc/ssl/laragon.crt";
     ssl_certificate_key "<<LARAGON_ROOT>>/etc/ssl/laragon.key";
     ssl_session_timeout 5m;

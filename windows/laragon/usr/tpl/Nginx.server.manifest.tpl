@@ -13,7 +13,7 @@ server {
         add_header Vary Accept-Encoding;
     }
 	
-    #websocket connection
+    # websocket connection --start
 	location /app/ {
         proxy_pass http://127.0.0.1:6001/app/;
         proxy_read_timeout     60;
@@ -30,7 +30,8 @@ server {
         proxy_pass http://127.0.0.1:6001/apps/;
         proxy_set_header Host $host;
     }
-	
+	# websocket connection --end
+
 	location / {
         try_files $uri $uri/ /index.php$is_args$args;
 		autoindex on;
@@ -39,8 +40,8 @@ server {
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass php_upstream;
-        #fastcgi_pass octane_roadrunner_fcgi;
-        #fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        # fastcgi_pass octane_roadrunner_fcgi;
+        # fastcgi_pass unix:/run/php/php7.0-fpm.sock;
 		fastcgi_keep_conn on;
     }
 	
