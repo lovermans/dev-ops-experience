@@ -47,6 +47,19 @@ server {
         # fastcgi_pass octane_roadrunner_fcgi;
         # fastcgi_pass unix:/run/php/php7.0-fpm.sock;
 		fastcgi_keep_conn on;
+
+        # proxy_http_version 1.1;
+		# proxy_set_header Host $host;
+		# proxy_set_header Scheme $scheme;
+		# proxy_set_header SERVER_PORT $server_port;
+		# proxy_set_header REMOTE_ADDR $remote_addr;
+		# proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		# proxy_set_header X-Forwarded-Port $server_port;
+		# proxy_set_header X-Forwarded-Host $host;
+		# proxy_set_header X-Forwarded-Proto $scheme;
+		# proxy_set_header Connection "keep-alive";
+		# proxy_set_header Proxy "";
+		# proxy_pass http://127.0.0.1:8000$request_uri;
     }
 	
     charset utf-8;

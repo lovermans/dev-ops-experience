@@ -12,14 +12,14 @@ server {
     #deny        all;
 
     if ($request_uri ~* "^(.*/)index\.php/*(.*)") {
-		return 301 $1$2;
+        return 301 $1$2;
 	}
  
     include "<<LARAGON_ROOT>>/etc/nginx/alias/*.conf";
 
     location / {
         try_files $uri $uri/ =404;
-		autoindex on;
+        autoindex on;
     }
     
     location ~ \.php$ {
