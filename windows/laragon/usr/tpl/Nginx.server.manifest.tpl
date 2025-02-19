@@ -42,13 +42,15 @@ server {
     }
 
     location ~ \.php$ {
+        # process php app using fastcgi --start
         include snippets/fastcgi-php.conf;
         fastcgi_pass php_upstream;
-        # fastcgi_pass octane_roadrunner_fcgi;
-        # fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        # fastcgi_pass octane_roadrunner_fcgi; # use roadrunner fcgi mode
+        # fastcgi_pass unix:/run/php/php7.0-fpm.sock; # use php-fpm unix socket
         fastcgi_keep_conn on;
+        # process php app using fastcgi --end
 
-        # Use Reverse Proxy Instead --start
+        # process php app using reverse proxy --start
         # proxy_http_version 1.1;
         # proxy_set_header Host $host;
         # proxy_set_header Scheme $scheme;
@@ -60,8 +62,8 @@ server {
         # proxy_set_header X-Forwarded-Proto $scheme;
         # proxy_set_header Connection "keep-alive";
         # proxy_set_header Proxy "";
-        # proxy_pass http://127.0.0.1:8000$request_uri;
-        # Use Reverse Proxy Instead --start
+        # proxy_pass http://127.0.0.1:8000$request_uri; # proxy server address
+        # process php app using reverse proxy --end
     }
 
     charset utf-8;
