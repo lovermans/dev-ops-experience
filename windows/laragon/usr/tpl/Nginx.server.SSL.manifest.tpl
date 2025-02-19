@@ -1,67 +1,70 @@
 server {
     listen <<PORT>>;
     listen <<SSL_PORT>> ssl;
-	http2 on;
+    http2 on;
     server_name <<HOSTNAME>> *.<<HOSTNAME>>;
     root "<<PROJECT_DIR>>";
-    
+
     index index.html index.htm index.php;
 
-    if ($request_uri ~* "^(.*/)index\.php/*(.*)") {
-		return 301 $1$2;
-	}
- 
+    if ($request_uri ~* "^(.*/)index\.php/*(.*)" ) {
+        return 301 $1$2;
+    }
+
     location ~* (.+)(\.)(css|js|webp|jpg|png|ico|svg|woff2)(.*) {
         try_files $1$2$3 /index.php$is_args$args;
-	    expires 360d;
-		add_header Cache-Control public;
+        expires 360d;
+        add_header Cache-Control public;
         add_header Pragma public;
         add_header Vary Accept-Encoding;
     }
-	
+
     # websocket connection --start
-	location /app/ {
+    location /app/ {
         proxy_pass http://127.0.0.1:6001/app/;
-        proxy_read_timeout     60;
-        proxy_connect_timeout  60;
-        proxy_redirect         off;
+        proxy_read_timeout 60;
+        proxy_connect_timeout 60;
+        proxy_redirect off;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
         proxy_set_header Host $host;
-		proxy_cache_bypass $http_upgrade;
+        proxy_cache_bypass $http_upgrade;
     }
-    
+
     location /apps/ {
         proxy_pass http://127.0.0.1:6001/apps/;
         proxy_set_header Host $host;
     }
     # websocket connection --end
-	
-	location / {
+
+    location / {
         try_files $uri $uri/ /index.php$is_args$args;
-		autoindex on;
+        autoindex on;
     }
-    
+
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass php_upstream;
         # fastcgi_pass octane_roadrunner_fcgi;
         # fastcgi_pass unix:/run/php/php7.0-fpm.sock;
-		fastcgi_keep_conn on;
+        fastcgi_keep_conn on;
 
-        proxy_http_version 1.1;
-		proxy_set_header Host $host;
-		proxy_set_header Scheme $scheme;
-		proxy_set_header SERVER_PORT $server_port;
-		proxy_set_header REMOTE_ADDR $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Forwarded-Port $server_port;
-		proxy_set_header X-Forwarded-Host $host;
-		proxy_set_header X-Forwarded-Proto $scheme;
-		proxy_set_header Connection "keep-alive";
-		proxy_set_header Proxy "";
-		proxy_pass http://127.0.0.1:8000$request_uri;
+
+        # Use Reverse Proxy Instead --start
+        # proxy_http_version 1.1;
+        # proxy_set_header Host $host;
+        # proxy_set_header Scheme $scheme;
+        # proxy_set_header SERVER_PORT $server_port;
+        # proxy_set_header REMOTE_ADDR $remote_addr;
+        # proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # proxy_set_header X-Forwarded-Port $server_port;
+        # proxy_set_header X-Forwarded-Host $host;
+        # proxy_set_header X-Forwarded-Proto $scheme;
+        # proxy_set_header Connection "keep-alive";
+        # proxy_set_header Proxy "";
+        # proxy_pass http://127.0.0.1:8000$request_uri;
+        # Use Reverse Proxy Instead --start
     }
 
     ssl_certificate "<<SSL_DIR>>/<<HOSTNAME>>.crt";
@@ -70,11 +73,17 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
-	
+
     charset utf-8;
-	
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off;
+    }
+    location = /robots.txt {
+        access_log off;
+        log_not_found off;
+    }
     location ~ /\.ht {
         deny all;
     }
