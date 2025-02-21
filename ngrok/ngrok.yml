@@ -1,0 +1,23 @@
+version: 3
+agent:
+  # authtoken: yourtoken # hrga
+  authtoken: yourtoken # loverman
+  inspect_db_size: -1
+  web_addr: false # 127.0.0.1:4040
+  console_ui: true # iftty
+endpoints:
+- name: semesta
+  # url: your-free-domain.ngrok-free.app # hrga
+  url: your-free-domain.ngrok-free.app # loverman
+  upstream:
+    url: 443
+    protocol: http2
+  # # [START--> Expose Single App]
+  # traffic_policy:
+  #   inbound:
+  #   - actions:
+  #     - type: "add-headers"
+  #       config:
+  #         headers:
+  #           host: myapp.test
+  # # [END--> Expose Single App]

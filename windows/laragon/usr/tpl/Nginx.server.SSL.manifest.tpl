@@ -7,36 +7,46 @@ server {
 
     index index.html index.htm index.php;
 
+    # [START--> remove index.php from url]
     if ($request_uri ~* "^(.*/)index\.php/*(.*)" ) {
         return 301 $1$2;
     }
+    # [END--> remove index.php from url]
 
+    # [START--> cache static assets]
     location ~* (.+)(\.)(css|js|webp|jpg|png|ico|svg|woff2)(.*) {
+        # # [START--> prevent hotlinking]
+        # valid_referers server_names;
+        # if ($invalid_referer) {
+        # 	return 404;
+        # }
+        # # [END--> prevent hotlinking]
         try_files $1$2$3 /index.php$is_args$args;
         expires 360d;
         add_header Cache-Control public;
         add_header Pragma public;
         add_header Vary Accept-Encoding;
     }
+    # [END--> cache static assets]
 
-    # websocket connection --start
-    location /app/ {
-        proxy_pass http://127.0.0.1:6001/app/;
-        proxy_read_timeout 60;
-        proxy_connect_timeout 60;
-        proxy_redirect off;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+    # # [START--> websocket connection]
+    # location /laravel/app/ {
+    # 	proxy_pass http://127.0.0.1:6001/app/;
+    # 	proxy_read_timeout 60;
+    # 	proxy_connect_timeout 60;
+    # 	proxy_redirect off;
+    # 	proxy_http_version 1.1;
+    # 	proxy_set_header Upgrade $http_upgrade;
+    # 	proxy_set_header Connection "Upgrade";
+    # 	proxy_set_header Host $host;
+    # 	proxy_cache_bypass $http_upgrade;
+    # }
 
-    location /apps/ {
-        proxy_pass http://127.0.0.1:6001/apps/;
-        proxy_set_header Host $host;
-    }
-    # websocket connection --end
+    # location /laravel/apps/ {
+    # 	proxy_pass http://127.0.0.1:6001/apps/;
+    # 	proxy_set_header Host $host;
+    # }
+    # # [END--> websocket connection]
 
     location / {
         try_files $uri $uri/ /index.php$is_args$args;
@@ -44,15 +54,15 @@ server {
     }
 
     location ~ \.php$ {
-        # process php app using fastcgi --start
+        # [START--> process php app using fastcgi]
         include snippets/fastcgi-php.conf;
-        fastcgi_pass php_upstream;
-        # fastcgi_pass octane_roadrunner_fcgi; # use roadrunner fcgi mode
-        # fastcgi_pass unix:/run/php/php7.0-fpm.sock; # use php-fpm unix socket
+        fastcgi_pass php_upstream; # default laragon php fastcgi
+        # fastcgi_pass octane_roadrunner_fcgi; # use roadrunner fastcgi mode
+        # fastcgi_pass unix:/run/php/php8.4-fpm.sock; # use php-fpm unix socket
         fastcgi_keep_conn on;
-        # process php app using fastcgi --end
+        # [END--> process php app using fastcgi]
 
-        # process php app using reverse proxy --start
+        # # [START--> process php app using reverse proxy]
         # proxy_http_version 1.1;
         # proxy_set_header Host $host;
         # proxy_set_header Scheme $scheme;
@@ -65,7 +75,7 @@ server {
         # proxy_set_header Connection "keep-alive";
         # proxy_set_header Proxy "";
         # proxy_pass http://127.0.0.1:8000$request_uri; # proxy server address
-        # process php app using reverse proxy --end
+        # # [END--> process php app using reverse proxy]
     }
 
     ssl_certificate "<<SSL_DIR>>/<<HOSTNAME>>.crt";

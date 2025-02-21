@@ -11,9 +11,11 @@ server {
     allow all;
     #deny        all;
 
+    # [START--> remove index.php from url]
     if ($request_uri ~* "^(.*/)index\.php/*(.*)" ) {
         return 301 $1$2;
     }
+    # [END--> remove index.php from url]
 
     include "<<LARAGON_ROOT>>/etc/nginx/alias/*.conf";
 
@@ -24,9 +26,9 @@ server {
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass php_upstream;
-        #fastcgi_pass octane_roadrunner_fcgi;
-        #fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        fastcgi_pass php_upstream; # default laragon php fastcgi
+        # fastcgi_pass octane_roadrunner_fcgi; # use roadrunner fastcgi mode
+        # fastcgi_pass unix:/run/php/php7.0-fpm.sock; # use php-fpm unix socket
         fastcgi_keep_conn on;
     }
 
