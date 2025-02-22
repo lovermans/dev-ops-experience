@@ -1,5 +1,7 @@
 server {
     listen <<PORT>>;
+    listen [::]:<<PORT>>;
+
     server_name <<HOSTNAME>> *.<<HOSTNAME>>;
     root "<<PROJECT_DIR>>";
 

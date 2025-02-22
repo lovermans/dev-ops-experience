@@ -1,6 +1,10 @@
 server {
     listen <<PORT>>;
+    listen [::]:<<PORT>>;
+
     listen <<SSL_PORT>> ssl;
+    listen [::]:<<SSL_PORT>> ssl;
+
     http2 on;
     server_name <<HOSTNAME>> *.<<HOSTNAME>>;
     root "<<PROJECT_DIR>>";
