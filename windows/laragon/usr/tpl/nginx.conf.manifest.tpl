@@ -26,7 +26,26 @@ http {
     gzip_min_length 100;
     gzip_buffers 16 8k;
     gzip_http_version 1.1;
-    gzip_types application/atom+xml application/javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype font/woff2 image/jpeg image/png image/webp image/svg+xml image/x-icon text/css text/plain text/x-component video/webm;
+    gzip_types application/atom+xml
+        application/javascript
+        application/json
+        application/rss+xml
+        application/vnd.ms-fontobject
+        application/x-font-ttf
+        application/x-web-app-manifest+json
+        application/xhtml+xml
+        application/xml
+        font/opentype
+        font/woff2
+        image/jpeg
+        image/png
+        image/webp
+        image/svg+xml
+        image/x-icon
+        text/css
+        text/plain
+        text/x-component
+        video/webm;
 
     types_hash_max_size 2048;
     client_max_body_size 2000m;

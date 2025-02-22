@@ -38,10 +38,12 @@ server {
         access_log off;
         log_not_found off;
     }
+
     location = /robots.txt {
         access_log off;
         log_not_found off;
     }
+
     location ~ /\.ht {
         deny all;
     }
