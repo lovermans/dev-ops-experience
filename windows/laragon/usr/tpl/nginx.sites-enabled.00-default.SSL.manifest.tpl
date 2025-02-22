@@ -1,6 +1,10 @@
 server {
     listen <<PORT>> default_server;
+    listen [::]:<<PORT>> default_server;
+
     listen <<SSL_PORT>> ssl default_server;
+    listen [::]:<<SSL_PORT>> ssl default_server;
+
     http2 on;
     server_name localhost;
     root "<<DOC_ROOT>>";
@@ -9,7 +13,7 @@ server {
 
     # Access Restrictions
     allow all;
-    #deny        all;
+    # deny all;
 
     # [START--> remove index.php from url]
     if ($request_uri ~* "^(.*/)index\.php/*(.*)" ) {

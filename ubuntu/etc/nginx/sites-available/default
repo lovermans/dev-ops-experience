@@ -1,9 +1,14 @@
 server {
-    listen <<PORT>> default_server;
-    listen [::]:<<PORT>> default_server;
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+
+    http2 on;
     server_name localhost;
-    root "<<DOC_ROOT>>";
+
+    root /home/user/Development;
 
     index index.html index.htm index.php;
 
@@ -17,7 +22,7 @@ server {
     }
     # [END--> remove index.php from url]
 
-    include "<<LARAGON_ROOT>>/etc/nginx/alias/*.conf";
+    include /etc/nginx/alias/*.conf;
 
     location / {
         try_files $uri $uri/ =404;
@@ -26,9 +31,8 @@ server {
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass php_upstream; # default laragon php fastcgi
         # fastcgi_pass octane_roadrunner_fcgi; # use roadrunner fastcgi mode
-        # fastcgi_pass unix:/run/php/php7.0-fpm.sock; # use php-fpm unix socket
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock; # use php-fpm unix socket
         fastcgi_keep_conn on;
     }
 
@@ -46,3 +50,23 @@ server {
         deny all;
     }
 }
+
+
+# Virtual Host configuration for example.com
+#
+# You can move that to a different file under sites-available/ and symlink that
+# to sites-enabled/ to enable it.
+#
+#server {
+#	listen 80;
+#	listen [::]:80;
+#
+#	server_name example.com;
+#
+#	root /var/www/example.com;
+#	index index.html;
+#
+#	location / {
+#		try_files $uri $uri/ =404;
+#	}
+#}
