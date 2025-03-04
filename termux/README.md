@@ -1,87 +1,223 @@
 
-## Disable Phantom Process Killer on Android 12 and Above
-
-### Instal Android Tools
-
+# Disable Phantom Process Killer on Android 12 or 13
+## Instal Android Tools
 ```sh
-pkg update
-pkg upgrade
-pkg install android-tools
+pkg update && pkg upgrade && pkg install android-tools
 ```
 
-### Turn On Developer Option and Wifi Debugging
-
+## Turn On Developer Option and Wireless Debugging
+### Pair Device
 ```sh
-adb pair ip:port paring_code
-adb connect ip:adbport
+adb pair ip:pairing_port paring_code
+```
+
+### Connect Device
+```sh
+adb connect ip:adb_port
+```
+
+### Disable Phantom Process Killer
+```sh
 adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"
+```
+```sh
 adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"
+```
+```sh
 adb shell settings put global settings_enable_monitor_phantom_procs false
-adb reboot
 ```
 
-## Setup Proot Distro Ubuntu
+Then disable all default and/or vendor battery optimization settings for termux app.
 
-### Update Termux Package then Instal Ubuntu
+# Disable Phantom Process Killer on Android 12 or 13
+- Go to Developer Option Menu.
+- Find "Disable child process restrictions" and toggle it on.
+
+Then disable all default and/or vendor battery optimization settings for termux app.
+
+# Setup Proot Distro Ubuntu
+## Keep Termux Running in Background
+```sh
+termux-wake-lock
+```
+
+## Termux Storage Permission Acces
 ```sh
 termux-setup-storage
-pkg update
-pkg install x11-repo
-pkg install termux-x11-nightly
-pkg install pulseaudio
-pkg install wget
-pkg install git
-pkg install nmap
+```
+
+
+If you prefer execute commands via remote SSH 
+
+- Package To Create User Password
+```sh
+pkg install termux-auth
+```
+
+- Create User Password
+```sh
+passwd
+```
+
+- Install Open SSH Server And NMap Package
+```sh
+pkg install openssh && pkg install nmap
+```
+
+- Start SSH Server
+```sh
+sshd
+```
+
+- Check SSH Open Port
+```sh
+nmap -sV localhost
+```
+
+- Check Local IP (Find Wlan Inet)
+```sh
+ifconfig
+```
+
+- Check Your Username
+```sh
+whoami
+```
+
+- SSH Login from other device
+```sh
+ssh your_android_username@your_local_ip -p you_SSH_port
+```
+
+## Instal Proot Distro Ubuntu
+- Install Proot Package
+```sh
 pkg install proot-distro
+```
+
+- Install Proot Distro Ubuntu
+```sh
 proot-distro install ubuntu
 ```
 
-### Login to Installed Ubuntu and add password for root user
+## Basic Setup Ubuntu
+- Login Ubuntu
 ```sh
-pd sh ubuntu --shared-tmp --fix-low-ports
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp
+```
+
+- Update & Upgrade Ubuntu Package
+```sh
+apt update && apt upgrade
+```
+
+- Add Password to Root User
+```sh
 passwd
 ```
-Fill and confirm new password then Enter.
 
-
-### Update Ubuntu Package and Add New User
+- Install Packages to Manage Users
 ```sh
-apt update
-apt upgrade
-apt install sudo nano adduser -y
+apt install sudo nano adduser
+```
 
-adduser newusername
+- Add New User 
+```sh
+adduser yournewusername
+```
+
+- Open User Setting 
+```sh
 nano /etc/sudoers
 ```
-Add newusername as sudoers from nano text editor.
 
-```
+- Edit User Setting 
+```diff
 # User privilege specification
 root    ALL=(ALL:ALL) ALL
-newusername ALL=(ALL:ALL) ALL
++ yournewusername ALL=(ALL:ALL) ALL
 ```
-Save and exit : Ctrl + X then press Y and Enter. Then logout from root user.
+Save file : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd> to exit nano text editor.
 
+- Exit Ubuntu
 ```sh
 exit
 ```
 
-### Login to Ubuntu with new user and add password
+- Login Ubuntu As New Created User
 ```sh
-pd sh ubuntu --user newusername --shared-tmp --fix-low-ports
-passwd
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
+``` 
+
+## Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)
+- Install XFCE Desktop Environtment (suitable for low resources devices)
+```sh
+sudo apt install xfce4 xfce4-goodies tigervnc-standalone-server firefox dbus-x11
 ```
 
-### Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)
+- Start VNC Server
 ```sh
-sudo apt install xfce4 xfce4-goodies tigervnc-standalone-server -y
-sudo apt install openssh-server -y
-vncserver -autokill -xstartup startxfce4 -localhost no -nolisten tcp :1
-sudo apt install xrdp
-sudo service xrdp restart
+vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
 ```
 
-## Setup PHP in Proot Distro Ubuntu
+- Stop VNC Server
+```sh
+vncserver -kill :1
+```
+
+# Fix Audio Proot Distro Ubuntu
+- Exit Proot Distro, Back to Termux and Install Pulseaudio
+```sh
+pkg install pulseaudio
+```
+
+- Start Pulseaudio in Termux
+```sh
+pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+```
+
+- Login to Proot Distro Ubuntu
+```sh
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername 'export PULSE_SERVER=127.0.0.1'
+```
+
+- Connect Pulse Audio
+```sh
+export PULSE_SERVER=127.0.0.1
+```
+
+- Start VNC Server
+```sh
+vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
+```
+
+# Desktop Environmet Hardware Acceleration (Mali GPU)
+- Exit Proot Distro, Back to Termux and Install Following Package
+```sh
+pkg install tur-repo; pkg install x11-repo; pkg install mesa-zink virglrenderer-mesa-zink vulkan-loader-android virglrenderer-android
+```
+
+- Start Pulseaudio in Termux
+```sh
+pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+```
+
+- Login to Proot Distro Ubuntu
+```sh
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername 'export PULSE_SERVER=127.0.0.1'
+```
+
+- Connect Pulse Audio
+```sh
+export PULSE_SERVER=127.0.0.1
+```
+
+- Start VNC Server
+```sh
+vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
+```
+
+# Setup PHP in Proot Distro Ubuntu
 ```sh
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 apt update
@@ -101,13 +237,13 @@ sudo apt install php8.4-soap
 sudo apt install php8.4-zip
 ```
 
-## Setup Nginx in Proot Distro Ubuntu
+# Setup Nginx in Proot Distro Ubuntu
 ```sh
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx
 apt update
 ```
 
-## Setup VSCode in Proot Distro Ubuntu
+# Setup VSCode in Proot Distro Ubuntu
 ```sh
 sudo apt-get install wget gpg
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
