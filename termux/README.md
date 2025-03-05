@@ -360,9 +360,19 @@ npm -v
 ```
 
 # Setup Nginx in Proot Distro Ubuntu
+- Add Nginx Repository
 ```sh
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx
-apt update
+```
+
+- Install Nginx With All Modules Available
+```sh
+sudo apt install nginx-extra
+```
+
+- Check Nginx Installation 
+```sh
+nginx -v
 ```
 
 # Setup VSCode in Proot Distro Ubuntu
