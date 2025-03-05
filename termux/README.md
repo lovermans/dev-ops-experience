@@ -338,6 +338,27 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 nvm
 ```
 
+# Setup NodeJS and NPM in Proot Distro Ubuntu
+- Download NodeJS and NPM via NVM
+```sh
+nvm install --lts
+```
+
+- Choose NodeJS version to use via NVM
+```sh
+nvm use --lts
+```
+
+- Check NodeJS Installation 
+```sh
+node -v
+```
+
+- Check NPM Installation 
+```sh
+npm -v
+```
+
 # Setup Nginx in Proot Distro Ubuntu
 ```sh
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx
