@@ -1,6 +1,7 @@
 > [!NOTE]  
 > - Tested On Android 14 Infinix Hot 50 Pro (No Root) with auto battery optimization disabled for termux app.
 > - "Disable child process restrictions" option in Developer Option Menu is enabled (toggle to On).
+> - Proot Distro using Ubuntu 24.04 LTS.
 
 
 # Disable Phantom Process Killer on Android 12 or 13
@@ -324,6 +325,17 @@ sudo mv composer.phar /usr/local/bin/composer
 - Check Composer Installation
 ```sh
 composer
+```
+
+# Setup NVM in Proot Distro Ubuntu
+- Download NVM
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+- Close and Reopen Terminal then Check NVM Installation 
+```sh
+nvm
 ```
 
 # Setup Nginx in Proot Distro Ubuntu
