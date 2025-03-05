@@ -33,7 +33,7 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
 
 Then disable all default and/or vendor auto battery optimization settings for termux app.
 
-# Disable Phantom Process Killer on Android 12 or 13
+# Disable Phantom Process Killer on Android 14
 - Go to Developer Option Menu.
 - Find "Disable child process restrictions" and toggle it on.
 
@@ -230,7 +230,7 @@ proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_
 GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
 ```
 
-## Ubuntu Desktop Environment with GNOME (Experimental)
+## Ubuntu 24.04 GNOME Desktop Environment
 - Login Ubuntu Root
 ```sh
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp
