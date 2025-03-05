@@ -277,23 +277,34 @@ vncserver -autokill -localhost no -nolisten tcp :1
 ```
 
 # Setup PHP in Proot Distro Ubuntu
+- Add Latest PHP Repository
 ```sh
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-apt update
+```
+
+- Add apt-utils Package
+```sh
+sudo apt install apt-utils
+```
+
+- Update & Upgrade Package
+```sh
+sudo apt update && apt upgrade
+```
+
+- Remove Old Package (if exists)
+```sh
+sudo apt autoremove
+```
+
+- Install PHP CLI & PHP FPM
+```sh
 sudo apt install php8.4-cli php8.4-fpm
-sudo apt install php8.4-bcmath
-sudo apt install php8.4-curl
-sudo apt install php8.4-xml
-sudo apt install php8.4-gd
-sudo apt install php8.4-gmp
-sudo apt install php8.4-intl
-sudo apt install php8.4-openssl
-sudo apt install php8.4-mbstring
-sudo apt install php8.4-mysqli
-sudo apt install php8.4-sqlite3
-sudo apt install php8.4-protobuf
-sudo apt install php8.4-soap
-sudo apt install php8.4-zip
+```
+
+- Check PHP Installation
+```sh
+php -v
 ```
 
 # Setup Nginx in Proot Distro Ubuntu
