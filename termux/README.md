@@ -1,3 +1,7 @@
+> [!NOTE]  
+> - Tested On Android 14 Infinix Hot 50 Pro (No Root) with auto battery optimization disabled for termux app.
+> - "Disable child process restrictions" option in Developer Option Menu is enabled (toggle to On).
+
 
 # Disable Phantom Process Killer on Android 12 or 13
 ## Instal Android Tools
@@ -27,7 +31,7 @@ adb shell "/system/bin/device_config put activity_manager max_phantom_processes 
 adb shell settings put global settings_enable_monitor_phantom_procs false
 ```
 
-Then disable all default and/or vendor battery optimization settings for termux app.
+Then disable all default and/or vendor auto battery optimization settings for termux app.
 
 # Disable Phantom Process Killer on Android 12 or 13
 - Go to Developer Option Menu.
@@ -157,13 +161,27 @@ sudo apt install xfce4 xfce4-goodies tigervnc-standalone-server firefox dbus-x11
 
 - Start VNC Server
 ```sh
-vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
+vncserver -xstartup startxfce4 -geometry 1624x720 -autokill -localhost no -nolisten tcp :1
 ```
 
 - Stop VNC Server
 ```sh
 vncserver -kill :1
 ```
+
+- Install XRDP For Using With Windows Remote Desktop
+```sh
+sudo apt install xrdp
+```
+
+- Start XRDP Service if it is not started
+```sh
+sudo service xrdp restart
+```
+- Start Windows XRDP and Connect to localhost or your local IP.
+- Choose Session : vnc-any.
+- Fill your IP/localhost, port VNC Server running port above (default :5901) and your VNC Password.
+- Or you could edit XRDP default setting in /etc/xrdp/xrdp.ini
 
 # Fix Audio Proot Distro Ubuntu
 - Exit Proot Distro, Back to Termux and Install Pulseaudio
@@ -178,7 +196,7 @@ pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth
 
 - Login to Proot Distro Ubuntu
 ```sh
-proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername 'export PULSE_SERVER=127.0.0.1'
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
 ```
 
 - Connect Pulse Audio
@@ -197,24 +215,65 @@ vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
 pkg install tur-repo; pkg install x11-repo; pkg install mesa-zink virglrenderer-mesa-zink vulkan-loader-android virglrenderer-android
 ```
 
-- Start Pulseaudio in Termux
+- Start Grapical Server in Termux
 ```sh
-pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+virgl_test_server_android
 ```
 
-- Login to Proot Distro Ubuntu
+- Open New Termux Session And Login To Ubuntu
 ```sh
-proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername 'export PULSE_SERVER=127.0.0.1'
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
 ```
 
-- Connect Pulse Audio
+- Start VNC Server With Hardware Aceleration
 ```sh
-export PULSE_SERVER=127.0.0.1
+GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
 ```
 
-- Start VNC Server
+## Ubuntu Desktop Environment with GNOME (Experimental)
+- Login Ubuntu Root
 ```sh
-vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp
+```
+
+- Install Package
+```sh
+apt install gnome-shell gnome-terminal gnome-tweaks gnome-shell-extensions gnome-shell-extension-ubuntu-dock nautilus gedit
+```
+
+- Install Theme
+```sh
+apt install yaru-theme-gtk yaru-theme-icon
+```
+
+- Create Xstartup File
+```sh
+nano .vnc/xstartup
+```
+- Write Xstartup File Content
+``` 
+#!/bin/bash
+
+export XDG_CURRENT_DESKTOP="GNOME"
+service dbus start
+gnome-shell --x11
+```
+Save file : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd> to exit nano text editor.
+
+- Make Xstartup File Executable
+```sh 
+chmod +x ~/.vnc/xstartup
+```
+
+- Fix Systemd Gnome Issue (execute command every time before starting VNC if there is an error or blank screen)
+```sh
+for file in $(find /usr -type f -iname "*login1*"); do rm -rf $file 
+done
+```
+
+- Start VNC
+```sh
+vncserver -autokill -localhost no -nolisten tcp :1
 ```
 
 # Setup PHP in Proot Distro Ubuntu
