@@ -3,6 +3,29 @@
 > - "Disable child process restrictions" option in Developer Option Menu is enabled (toggle to On).
 > - Proot Distro using Ubuntu 24.04 LTS.
 
+- [Disable Phantom Process Killer on Android 12 or 13](#disable-phantom-process-killer-on-android-12-or-13)
+  - [Instal Android Tools](#instal-android-tools)
+  - [Turn On Developer Option and Wireless Debugging](#turn-on-developer-option-and-wireless-debugging)
+    - [Pair Device](#pair-device)
+    - [Connect Device](#connect-device)
+    - [Disable Phantom Process Killer](#disable-phantom-process-killer)
+- [Disable Phantom Process Killer on Android 14](#disable-phantom-process-killer-on-android-14)
+- [Setup Proot Distro Ubuntu](#setup-proot-distro-ubuntu)
+  - [Keep Termux Running in Background](#keep-termux-running-in-background)
+  - [Termux Storage Permission Acces](#termux-storage-permission-acces)
+  - [Instal Proot Distro Ubuntu](#instal-proot-distro-ubuntu)
+  - [Basic Setup Ubuntu](#basic-setup-ubuntu)
+  - [Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)](#install-ubuntu-desktop-environment-for-remote-vnc-or-windows-remote-desktop)
+    - [XFCE Desktop Environtment (lightweight \& highly customable)](#xfce-desktop-environtment-lightweight--highly-customable)
+    - [GNOME Desktop Environment (modern, more feature but heavy on low resource device)](#gnome-desktop-environment-modern-more-feature-but-heavy-on-low-resource-device)
+  - [Fix Audio Proot Distro Ubuntu](#fix-audio-proot-distro-ubuntu)
+  - [Desktop Environmet Hardware Acceleration (Mali GPU)](#desktop-environmet-hardware-acceleration-mali-gpu)
+- [Setup PHP in Proot Distro Ubuntu](#setup-php-in-proot-distro-ubuntu)
+- [Setup Composer in Proot Distro Ubuntu](#setup-composer-in-proot-distro-ubuntu)
+- [Setup NVM in Proot Distro Ubuntu](#setup-nvm-in-proot-distro-ubuntu)
+- [Setup NodeJS and NPM in Proot Distro Ubuntu](#setup-nodejs-and-npm-in-proot-distro-ubuntu)
+- [Setup Nginx in Proot Distro Ubuntu](#setup-nginx-in-proot-distro-ubuntu)
+- [Setup VSCode in Proot Distro Ubuntu](#setup-vscode-in-proot-distro-ubuntu)
 
 # Disable Phantom Process Killer on Android 12 or 13
 ## Instal Android Tools
@@ -155,6 +178,7 @@ proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_
 ``` 
 
 ## Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)
+### XFCE Desktop Environtment (lightweight & highly customable)
 - Install XFCE Desktop Environtment (suitable for low resources devices)
 ```sh
 sudo apt install xfce4 xfce4-goodies tigervnc-standalone-server firefox dbus-x11
@@ -184,55 +208,8 @@ sudo service xrdp restart
 - Fill your IP/localhost, port VNC Server running port above (default :5901) and your VNC Password.
 - Or you could edit XRDP default setting in /etc/xrdp/xrdp.ini
 
-# Fix Audio Proot Distro Ubuntu
-- Exit Proot Distro, Back to Termux and Install Pulseaudio
-```sh
-pkg install pulseaudio
-```
-
-- Start Pulseaudio in Termux
-```sh
-pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
-```
-
-- Login to Proot Distro Ubuntu
-```sh
-proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
-```
-
-- Connect Pulse Audio
-```sh
-export PULSE_SERVER=127.0.0.1
-```
-
-- Start VNC Server
-```sh
-vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
-```
-
-# Desktop Environmet Hardware Acceleration (Mali GPU)
-- Exit Proot Distro, Back to Termux and Install Following Package
-```sh
-pkg install tur-repo; pkg install x11-repo; pkg install mesa-zink virglrenderer-mesa-zink vulkan-loader-android virglrenderer-android
-```
-
-- Start Grapical Server in Termux
-```sh
-virgl_test_server_android
-```
-
-- Open New Termux Session And Login To Ubuntu
-```sh
-proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
-```
-
-- Start VNC Server With Hardware Aceleration
-```sh
-GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
-```
-
-## Ubuntu 24.04 GNOME Desktop Environment
-- Login Ubuntu Root
+### GNOME Desktop Environment (modern, more feature but heavy on low resource device)
+- Login Ubuntu with Root access
 ```sh
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp
 ```
@@ -271,10 +248,58 @@ chmod +x ~/.vnc/xstartup
 for file in $(find /usr -type f -iname "*login1*"); do rm -rf $file 
 done
 ```
+Then exit and relogin to root (superuser) access
 
 - Start VNC
 ```sh
 vncserver -autokill -localhost no -nolisten tcp :1
+```
+
+## Fix Audio Proot Distro Ubuntu
+- Exit Proot Distro, Back to Termux and Install Pulseaudio
+```sh
+pkg install pulseaudio
+```
+
+- Start Pulseaudio in Termux
+```sh
+pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+```
+
+- Login to Proot Distro Ubuntu
+```sh
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
+```
+
+- Connect Pulse Audio
+```sh
+export PULSE_SERVER=127.0.0.1
+```
+
+- Start VNC Server
+```sh
+vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
+```
+
+## Desktop Environmet Hardware Acceleration (Mali GPU)
+- Exit Proot Distro, Back to Termux and Install Following Package
+```sh
+pkg install tur-repo; pkg install x11-repo; pkg install mesa-zink virglrenderer-mesa-zink vulkan-loader-android virglrenderer-android
+```
+
+- Start Grapical Server in Termux
+```sh
+virgl_test_server_android
+```
+
+- Open New Termux Session And Login To Ubuntu
+```sh
+proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
+```
+
+- Start VNC Server With Hardware Aceleration
+```sh
+GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
 ```
 
 # Setup PHP in Proot Distro Ubuntu
