@@ -21,11 +21,13 @@
     - [GNOME Desktop Environment (modern, more feature but heavy on low resource device)](#gnome-desktop-environment-modern-more-feature-but-heavy-on-low-resource-device)
   - [Fix Audio Proot Distro Ubuntu](#fix-audio-proot-distro-ubuntu)
   - [Desktop Environmet Hardware Acceleration (Mali GPU)](#desktop-environmet-hardware-acceleration-mali-gpu)
+  - [Install Chromium Web Browser](#install-chromium-web-browser)
 - [Setup PHP in Proot Distro Ubuntu](#setup-php-in-proot-distro-ubuntu)
 - [Setup Composer in Proot Distro Ubuntu](#setup-composer-in-proot-distro-ubuntu)
 - [Setup NVM in Proot Distro Ubuntu](#setup-nvm-in-proot-distro-ubuntu)
 - [Setup NodeJS and NPM in Proot Distro Ubuntu](#setup-nodejs-and-npm-in-proot-distro-ubuntu)
 - [Setup Nginx in Proot Distro Ubuntu](#setup-nginx-in-proot-distro-ubuntu)
+- [Setup MariaDB in Proot Distro Ubuntu](#setup-mariadb-in-proot-distro-ubuntu)
 - [Setup VSCode in Proot Distro Ubuntu](#setup-vscode-in-proot-distro-ubuntu)
 
 # Disable Phantom Process Killer on Android 12 or 13
@@ -166,7 +168,7 @@ nano /etc/sudoers
 root    ALL=(ALL:ALL) ALL
 + yournewusername ALL=(ALL:ALL) ALL
 ```
-Save file : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd> to exit nano text editor.
+Save and exit nano text editor : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd>.
 
 - Exit Ubuntu
 ```sh
@@ -243,7 +245,7 @@ export XDG_CURRENT_DESKTOP="GNOME"
 service dbus start
 gnome-shell --x11
 ```
-Save file : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd> to exit nano text editor.
+Save and exit nano text editor : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd>.
 
 - Make Xstartup File Executable
 ```sh 
@@ -302,6 +304,27 @@ virgl_test_server_android
 - Open New Termux Session And Login To Ubuntu
 ```sh
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
+```
+
+## Install Chromium Web Browser
+- Add Repository
+```sh
+sudo add-apt-repository ppa:xtradeb/apps
+```
+
+- Update Repository
+```sh
+sudo apt update
+```
+
+- Install Chromium
+```sh
+sudo apt install chromium
+```
+
+- Open Chromium Web Broser
+```sh
+chromium --no-sandbox
 ```
 
 - Start VNC Server With Hardware Aceleration
@@ -405,6 +428,75 @@ sudo apt install nginx-extra
 - Check Nginx Installation 
 ```sh
 nginx -v
+```
+
+- Run Nginx Server 
+```sh
+sudo service nginx start
+```
+You could also put following service commands : stop, restart, reload, force-reload, status, configtest, rotate, upgrade.
+
+# Setup MariaDB in Proot Distro Ubuntu
+- Add MariaDB Repository
+```sh
+sudo apt-get install apt-transport-https curl
+```
+```sh
+sudo mkdir -p /etc/apt/keyrings
+```
+```sh
+sudo curl -o /etc/apt/keyrings/mariadb-keyring.pgp 'https://mariadb.org/mariadb_release_signing_key.pgp'
+```
+```sh
+sudo nano /etc/apt/sources.list.d/mariadb.sources
+```
+Copy and paste script bellow
+```
+# MariaDB 11.8 repository list - created 2025-03-08 06:52 UTC
+# https://mariadb.org/download/
+X-Repolib-Name: MariaDB
+Types: deb
+# deb.mariadb.org is a dynamic mirror if your preferred mirror goes offline. See https://mariadb.org/mirrorbits/ for details.
+# URIs: https://deb.mariadb.org/11.rc/ubuntu
+URIs: https://mirror.citrahost.com/mariadb/repo/11.8/ubuntu
+Suites: noble
+Components: main main/debug
+Signed-By: /etc/apt/keyrings/mariadb-keyring.pgp
+```
+Save and exit nano text editor : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd>.
+
+- Install MariaDB 
+```sh
+sudo apt update
+```
+```sh
+sudo apt install mariadb-server
+```
+
+- Check MariaDB Installation 
+```sh
+mariadb --version
+```
+
+- Run MariaDB Server 
+```sh
+sudo service mariadb start
+```
+You could also put following service commands : stop, restart, reload, force-reload, status.
+
+- Secure MariaDB Server Setup
+```sh
+sudo mariadb-secure-installation
+```
+
+- Connect MariaDB
+```sh
+sudo mariadb -u root -p
+```
+
+- List All MariaDB User
+```sh
+SELECT user, host, password, plugin from mysql.user;
 ```
 
 # Setup VSCode in Proot Distro Ubuntu
