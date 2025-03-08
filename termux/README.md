@@ -14,7 +14,8 @@
   - [Keep Termux Running in Background](#keep-termux-running-in-background)
   - [Termux Storage Permission Acces](#termux-storage-permission-acces)
   - [Instal Proot Distro Ubuntu](#instal-proot-distro-ubuntu)
-  - [Basic Setup Ubuntu](#basic-setup-ubuntu)
+  - [Basic User Setup Ubuntu](#basic-user-setup-ubuntu)
+  - [Change Timezone](#change-timezone)
   - [Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)](#install-ubuntu-desktop-environment-for-remote-vnc-or-windows-remote-desktop)
     - [XFCE Desktop Environtment (lightweight \& highly customable)](#xfce-desktop-environtment-lightweight--highly-customable)
     - [GNOME Desktop Environment (modern, more feature but heavy on low resource device)](#gnome-desktop-environment-modern-more-feature-but-heavy-on-low-resource-device)
@@ -128,7 +129,7 @@ pkg install proot-distro
 proot-distro install ubuntu
 ```
 
-## Basic Setup Ubuntu
+## Basic User Setup Ubuntu
 - Login Ubuntu
 ```sh
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp
@@ -176,6 +177,12 @@ exit
 ```sh
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
 ``` 
+
+## Change Timezone
+```sh
+sudo dpkg-reconfigure tzdata
+```
+Choose Your Timezone Region
 
 ## Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)
 ### XFCE Desktop Environtment (lightweight & highly customable)
