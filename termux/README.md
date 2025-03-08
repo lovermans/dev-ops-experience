@@ -306,6 +306,11 @@ virgl_test_server_android
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
 ```
 
+- Start VNC Server With Hardware Aceleration
+```sh
+GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
+```
+
 ## Install Chromium Web Browser
 - Add Repository
 ```sh
@@ -327,10 +332,8 @@ sudo apt install chromium
 chromium --no-sandbox
 ```
 
-- Start VNC Server With Hardware Aceleration
-```sh
-GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 vncserver -xstartup startxfce4 -autokill -localhost no -nolisten tcp :1
-```
+- Make Chromium as Default Browser in XFCE Desktop Environment
+> Settings -> Default Applications -> Internet -> Web Browser -> Choose Chromium
 
 # Setup PHP in Proot Distro Ubuntu
 - Add Latest PHP Repository
@@ -489,17 +492,23 @@ You could also put following service commands : stop, restart, reload, force-rel
 sudo mariadb-secure-installation
 ```
 
-- Connect MariaDB
+- Login MariaDB
 ```sh
 sudo mariadb -u root -p
 ```
 
-- List All MariaDB User
+- List All MariaDB User 
 ```sh
 SELECT user, host, password, plugin from mysql.user;
 ```
 
+- Logout MariaDB
+```sh
+exit
+```
+
 # Setup VSCode in Proot Distro Ubuntu
+- Add Repository
 ```sh
 sudo apt-get install wget gpg
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
@@ -508,8 +517,14 @@ echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft
 rm -f packages.microsoft.gpg
 ```
 
+- Install VSCode
 ```sh
 sudo apt install apt-transport-https
 sudo apt update
 sudo apt install code
+```
+
+- Open VSCode
+```sh
+code --no-sandbox
 ```
