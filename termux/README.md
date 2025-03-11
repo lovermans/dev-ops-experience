@@ -29,6 +29,7 @@
 - [Setup Nginx in Proot Distro Ubuntu](#setup-nginx-in-proot-distro-ubuntu)
 - [Setup MariaDB in Proot Distro Ubuntu](#setup-mariadb-in-proot-distro-ubuntu)
 - [Setup VSCode in Proot Distro Ubuntu](#setup-vscode-in-proot-distro-ubuntu)
+- [Setup Self Signed SSL Certificate](#setup-self-signed-ssl-certificate)
 
 # Disable Phantom Process Killer on Android 12 or 13
 ## Instal Android Tools
@@ -528,4 +529,94 @@ sudo apt install code
 - Open VSCode
 ```sh
 code --no-sandbox
+```
+
+# Setup Self Signed SSL Certificate
+- Install ca-certificates package
+```sh
+sudo install ca-certificates
+```
+
+- Custom Self Signed SSL Working Directory
+```sh
+mkdir ~/certs
+cd ~/certs
+```
+
+- Create local certificate authority private key
+```sh
+openssl genrsa -des3 -out myCA.key 2048
+```
+Make private key passphrase
+
+- Create root certificate
+```sh
+openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
+```
+Enter your private key passphrase and fill issuer identity questions
+
+- Create root certificate
+```sh
+openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
+```
+Enter your private key passphrase and fill issuer identity questions
+
+- Copy root certificate to ca-certificates directory as .crt file
+```sh
+sudo cp ~/certs/myCA.pem /usr/local/share/ca-certificates/myCA.crt
+```
+
+- Update certificate store
+```sh
+sudo update-ca-certificates 
+```
+
+- Create new bash file
+```sh
+touch generate-ssl.sh 
+```
+
+- Open bash file
+```sh
+nano generate-ssl.sh 
+```
+
+- Copy and paste this command
+```
+######################
+# Create CA-signed certs
+######################
+
+NAME=localhost.test # Use your own domain name
+# Generate a private key
+openssl genrsa -out $NAME.key 2048
+# Create a certificate-signing request
+openssl req -new -key $NAME.key -out $NAME.csr
+# Create a config file for the extensions
+>$NAME.ext cat <<-EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost # Be sure to include the domain name here because Common Name is not so commonly honoured by itself
+DNS.2 = localhost.test
+DNS.3 = semesta.test
+DNS.4 = *.semesta.test
+#IP.1 = 127.0.0.1 # Optionally, add an IP address (if the connection which you have planned requires it)
+EOF
+# Create the signed certificate
+openssl x509 -req -in $NAME.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial \
+-out $NAME.crt -days 825 -sha256 -extfile $NAME.ext
+```
+Save and exit nano text editor : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd>.
+
+- Make bash file executable
+```sh
+chmod +x generate-ssl.sh 
+```
+
+- Create self signed SSL
+```sh
+./generate-ssl.sh 
 ```
