@@ -333,7 +333,8 @@ chromium --no-sandbox
 ```
 
 - Make Chromium as Default Browser in XFCE Desktop Environment
-> Settings -> Default Applications -> Internet -> Web Browser -> Choose Chromium
+> Settings -> Default Applications -> Internet -> Web Browser -> Other
+> Select "chromium" and add "--no-sandbox" on the command line
 
 # Setup PHP in Proot Distro Ubuntu
 - Add Latest PHP Repository
