@@ -368,6 +368,11 @@ sudo apt install php8.4-cli php8.4-fpm
 php -v
 ```
 
+- Install more PHP Extension
+```sh
+sudo apt install php8.4-{bcmath,curl,gd,gmp,intl,mbstring,mysql,protobuf,soap,sqlite3,xml,xsl,zip}
+```
+
 # Setup Composer in Proot Distro Ubuntu
 - Download Composer
 ```sh
