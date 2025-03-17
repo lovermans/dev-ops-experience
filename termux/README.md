@@ -350,7 +350,7 @@ sudo apt install apt-utils
 
 - Update & Upgrade Package
 ```sh
-sudo apt update && apt upgrade
+sudo apt update && sudo apt upgrade
 ```
 
 - Remove Old Package (if exists)
@@ -425,9 +425,14 @@ npm -v
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx
 ```
 
+- Update & Upgrade Package
+```sh
+sudo apt update && sudo apt upgrade
+```
+
 - Install Nginx With All Modules Available
 ```sh
-sudo apt install nginx-extra
+sudo apt install nginx-extras
 ```
 
 - Check Nginx Installation 
@@ -444,7 +449,7 @@ You could also put following service commands : stop, restart, reload, force-rel
 # Setup MariaDB in Proot Distro Ubuntu
 - Add MariaDB Repository
 ```sh
-sudo apt-get install apt-transport-https curl
+sudo apt install apt-transport-https curl
 ```
 ```sh
 sudo mkdir -p /etc/apt/keyrings
@@ -601,8 +606,8 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost # Be sure to include the domain name here because Common Name is not so commonly honoured by itself
 DNS.2 = localhost.test
-DNS.3 = semesta.test
-DNS.4 = *.semesta.test
+DNS.3 = yourwebsite.test
+DNS.4 = *.yourwebsite.test
 #IP.1 = 127.0.0.1 # Optionally, add an IP address (if the connection which you have planned requires it)
 EOF
 # Create the signed certificate
