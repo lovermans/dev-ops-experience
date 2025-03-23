@@ -30,6 +30,7 @@
 - [Setup MariaDB in Proot Distro Ubuntu](#setup-mariadb-in-proot-distro-ubuntu)
 - [Setup VSCode in Proot Distro Ubuntu](#setup-vscode-in-proot-distro-ubuntu)
 - [Setup Self Signed SSL Certificate](#setup-self-signed-ssl-certificate)
+- [Setup Wine](#setup-wine)
 
 # Disable Phantom Process Killer on Android 12 or 13
 ## Instal Android Tools
@@ -629,4 +630,132 @@ chmod +x generate-ssl.sh
 - Create self signed SSL
 ```sh
 ./generate-ssl.sh 
+```
+
+# Setup Wine
+- Add Box86 Repo
+```sh
+wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
+wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
+```
+
+- Add Box64 Repo
+```sh
+wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list
+wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
+```
+
+- Install Box86
+```sh
+dpkg --add-architecture armhf
+sudo apt update -y
+sudo apt install libc6:armhf -y
+sudo apt install box86-android:armhf -y
+```
+
+- Install Box64
+```sh
+sudo apt update -y
+sudo apt install box64-android -y
+```
+
+- Install Additional Package
+```sh
+sudo apt install nano cabextract libfreetype6 libfreetype6:armhf libfontconfig libfontconfig:armhf libxext6 libxext6:armhf libxinerama-dev libxinerama-dev:armhf libxxf86vm1 libxxf86vm1:armhf libxrender1 libxrender1:armhf libxcomposite1 libxcomposite1:armhf libxrandr2 libxrandr2:armhf libxi6 libxi6:armhf libxcursor1 libxcursor1:armhf libvulkan-dev libvulkan-dev:armhf zenity
+```
+
+- Install Wine
+```sh
+cd ~/
+wget https://github.com/Kron4ek/Wine-Builds/releases/download/8.0.1/wine-8.0.1-amd64.tar.xz
+wget https://github.com/Kron4ek/Wine-Builds/releases/download/8.0.1/wine-8.0.1-x86.tar.xz
+tar xvf wine-8.0.1-amd64.tar.xz
+tar xvf wine-8.0.1-x86.tar.xz
+mv wine-8.0.1-amd64 wine64
+mv wine-8.0.1-x86 wine
+```
+
+- Setup Bash
+```sh
+echo 'export DISPLAY=:2 #your display environment
+export BOX86_PATH=~/wine/bin/
+export BOX86_LD_LIBRARY_PATH=~/wine/lib/wine/i386-unix/:/lib/i386-linux-gnu/:/lib/aarch64-linux-gnu/:/lib/arm-linux-gnueabihf/:/usr/lib/aarch64-linux-gnu/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/i386-linux-gnu/
+export BOX64_PATH=~/wine64/bin/
+export BOX64_LD_LIBRARY_PATH=~/wine64/lib/i386-unix/:~/wine64/lib/wine/x86_64-unix/:/lib/i386-linux-gnu/:/lib/x86_64-linux-gnu:/lib/aarch64-linux-gnu/:/lib/arm-linux-gnueabihf/:/usr/lib/aarch64-linux-gnu/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/i386-linux-gnu/:/usr/lib/x86_64-linux-gnu' >> ~/.bashrc
+
+source ~/.bashrc
+```
+
+- Wine Shortcut
+```sh
+echo '#!/bin/bash 
+export WINEPREFIX=~/.wine32
+box86 '"$HOME/wine/bin/wine "'"$@"' > /usr/local/bin/wine
+chmod +x /usr/local/bin/wine
+echo '#!/bin/bash 
+export WINEPREFIX=~/.wine64
+box64 '"$HOME/wine64/bin/wine64 "'"$@"' > /usr/local/bin/wine64
+chmod +x /usr/local/bin/wine64
+```
+
+- Install Winetricks
+```sh
+cd ~/
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+chmod +x winetricks
+mv winetricks /usr/local/bin/
+```
+
+- Setup Winetricks
+```sh
+echo '#!/bin/bash 
+export BOX86_NOBANNER=1 WINE=wine WINEPREFIX=~/.wine32 WINESERVER=~/wine/bin/wineserver
+wine '"/usr/local/bin/winetricks "'"$@"' > /usr/local/bin/winetricks32
+chmod +x /usr/local/bin/winetricks32
+echo '#!/bin/bash 
+export BOX64_NOBANNER=1 WINE=wine64 WINEPREFIX=~/.wine64 WINESERVER=~/wine64/bin/wineserver
+wine64 '"/usr/local/bin/winetricks "'"$@"' > /usr/local/bin/winetricks64
+chmod +x /usr/local/bin/winetricks64
+```
+
+- Wine Explorer Shotcut
+```sh
+cd ~/Desktop
+echo '[Desktop Entry]
+Name=Wine32 Explorer
+Exec=bash -c "wine explorer"
+Icon=wine
+Type=Application' > ~/Desktop/Wine32_Explorer.desktop
+chmod +x ~/Desktop/Wine32_Explorer.desktop
+cp ~/Desktop/Wine32_Explorer.desktop /usr/share/applications/
+
+cd ~/Desktop
+echo '[Desktop Entry]
+Name=Wine64 Explorer
+Exec=bash -c "wine64 explorer"
+Icon=wine
+Type=Application' > ~/Desktop/Wine64_Explorer.desktop
+chmod +x ~/Desktop/Wine64_Explorer.desktop
+cp ~/Desktop/Wine64_Explorer.desktop /usr/share/applications/
+```
+
+- Winetricks Shotcut
+```sh
+cd ~/Desktop
+echo '[Desktop Entry]
+Name=Winetricks32 Explorer
+Exec=bash -c "winetricks32 --gui"
+Icon=wine
+Type=Application' > ~/Desktop/Winetricks32_gui.desktop
+chmod +x ~/Desktop/Winetricks32_gui.desktop
+cp ~/Desktop/Winetricks32_gui.desktop /usr/share/applications/
+
+cd ~/Desktop
+echo '[Desktop Entry]
+Name=Winetricks64 Explorer
+Exec=bash -c "winetricks64 --gui"
+Icon=wine
+Type=Application' > ~/Desktop/Winetricks64_gui.desktop
+chmod +x ~/Desktop/Winetricks64_gui.desktop
+cp ~/Desktop/Winetricks64_gui.desktop /usr/share/applications/
 ```
