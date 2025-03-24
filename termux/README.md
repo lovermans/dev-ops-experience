@@ -687,7 +687,7 @@ mv wine-8.0.1-x86 wine
 
 - Setup Bash
 ```sh
-echo 'export DISPLAY=:2 #your display environment
+echo 'export DISPLAY=:1 #your display environment
 export BOX86_PATH=~/wine/bin/
 export BOX86_LD_LIBRARY_PATH=~/wine/lib/wine/i386-unix/:/lib/i386-linux-gnu/:/lib/aarch64-linux-gnu/:/lib/arm-linux-gnueabihf/:/usr/lib/aarch64-linux-gnu/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/i386-linux-gnu/
 export BOX64_PATH=~/wine64/bin/
