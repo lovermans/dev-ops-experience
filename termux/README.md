@@ -633,6 +633,16 @@ chmod +x generate-ssl.sh
 ```
 
 # Setup Wine
+- Login As Superuser
+```sh
+proot-distro login ubuntu --fix-low-ports
+```
+
+- Start VNC on display 1
+```sh
+vncserver -xstartup startxfce4 -geometry 1624x720 -autokill -localhost no -nolisten tcp :1
+```
+
 - Add Box86 Repo
 ```sh
 wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
@@ -648,20 +658,20 @@ wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /e
 - Install Box86
 ```sh
 dpkg --add-architecture armhf
-sudo apt update -y
-sudo apt install libc6:armhf -y
-sudo apt install box86-android:armhf -y
+apt update -y
+apt install libc6:armhf -y
+apt install box86-android:armhf -y
 ```
 
 - Install Box64
 ```sh
-sudo apt update -y
-sudo apt install box64-android -y
+apt update -y
+apt install box64-android -y
 ```
 
 - Install Additional Package
 ```sh
-sudo apt install nano cabextract libfreetype6 libfreetype6:armhf libfontconfig libfontconfig:armhf libxext6 libxext6:armhf libxinerama-dev libxinerama-dev:armhf libxxf86vm1 libxxf86vm1:armhf libxrender1 libxrender1:armhf libxcomposite1 libxcomposite1:armhf libxrandr2 libxrandr2:armhf libxi6 libxi6:armhf libxcursor1 libxcursor1:armhf libvulkan-dev libvulkan-dev:armhf zenity
+apt install nano cabextract libfreetype6 libfreetype6:armhf libfontconfig libfontconfig:armhf libxext6 libxext6:armhf libxinerama-dev libxinerama-dev:armhf libxxf86vm1 libxxf86vm1:armhf libxrender1 libxrender1:armhf libxcomposite1 libxcomposite1:armhf libxrandr2 libxrandr2:armhf libxi6 libxi6:armhf libxcursor1 libxcursor1:armhf libvulkan-dev libvulkan-dev:armhf zenity
 ```
 
 - Install Wine
