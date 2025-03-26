@@ -8,7 +8,7 @@ server {
     http2 on;
     server_name localhost;
 
-    root /home/user/Development;
+    root /home/user/dev;
 
     index index.html index.htm index.php;
 
