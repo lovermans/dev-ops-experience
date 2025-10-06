@@ -374,6 +374,11 @@ php -v
 sudo apt install php8.4-{bcmath,curl,gd,gmp,intl,mbstring,mysql,protobuf,soap,sqlite3,xml,xsl,zip}
 ```
 
+- Run PHP-FPM
+```sh
+sudo service php8.4-fpm start
+```
+
 # Setup Composer in Proot Distro Ubuntu
 - Download Composer
 ```sh
