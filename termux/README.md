@@ -545,7 +545,7 @@ code --no-sandbox
 # Setup Self Signed SSL Certificate
 - Install ca-certificates package
 ```sh
-sudo install ca-certificates
+sudo apt install ca-certificates
 ```
 
 - Custom Self Signed SSL Working Directory
@@ -559,12 +559,6 @@ cd ~/certs
 openssl genrsa -des3 -out myCA.key 2048
 ```
 Make private key passphrase
-
-- Create root certificate
-```sh
-openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
-```
-Enter your private key passphrase and fill issuer identity questions
 
 - Create root certificate
 ```sh
@@ -631,6 +625,10 @@ chmod +x generate-ssl.sh
 ```sh
 ./generate-ssl.sh 
 ```
+
+- Rename localhost.test.crt to localhost.test.pem on home/user/certs folder
+- Copy localhost.test.pem above to etc/ssl/certs folder
+- Copy localhost.test.key from home/user/certs folder to etc/ssl/private folder
 
 # Setup Wine
 - Login As Superuser
