@@ -34,7 +34,7 @@ server {
     # [END--> cache static assets]
 
     # # [START--> websocket connection]
-    # location /laravel/app/ {
+    # location /app/ {
     # 	proxy_pass http://127.0.0.1:6001/app/;
     # 	proxy_read_timeout 60;
     # 	proxy_connect_timeout 60;
@@ -46,7 +46,7 @@ server {
     # 	proxy_cache_bypass $http_upgrade;
     # }
 
-    # location /laravel/apps/ {
+    # location /apps/ {
     # 	proxy_pass http://127.0.0.1:6001/apps/;
     # 	proxy_set_header Host $host;
     # }

@@ -11,7 +11,7 @@ endpoints:
   url: your-free-domain.ngrok-free.app # loverman
   upstream:
     url: 443
-    protocol: http2
+    # protocol: http2
   # # [START--> Expose Single App]
   # traffic_policy:
   #   inbound:
