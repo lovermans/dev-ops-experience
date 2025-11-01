@@ -1,0 +1,27 @@
+version: '3'
+rpc:
+  listen: 'tcp://127.0.0.1:6002'
+server:
+  command: 'php ./vendor/bin/roadrunner-worker'
+  env:
+  - APP_ENV: 'production'
+  - APP_BASE_PATH: 'D:\development\laravel'
+  - LARAVEL_OCTANE: '1'
+http:
+  fcgi:
+    address: tcp://0.0.0.0:9000
+  address: '127.0.0.1:8000'
+  access_logs: false
+  middleware: [ 'sendfile', 'static' ]
+  static:
+    dir: 'public'
+  pool:
+    num_workers: 2
+    max_jobs: 500
+    supervisor:
+      exec_ttl: 120s
+logs:
+  mode: off
+  level: debug
+  output: stdout
+  encoding: console
