@@ -33,7 +33,17 @@ php artisan octane:install
 cd
 ```
 
-- Go To Termux Root Directory
+- Mock Somaxconn File
 ```sh
-cd
+echo 128 > ~/.somaxconn
+```
+
+- Go To Laravel Project Directory
+```sh
+cd octane-app
+```
+
+- Start Laravel Octane (Roadrunner)
+```sh
+proot -b ~/.somaxconn:/proc/sys/net/core/somaxconn php artisan octane:start --server=roadrunner --host=127.0.0.1 --port=8000
 ```
