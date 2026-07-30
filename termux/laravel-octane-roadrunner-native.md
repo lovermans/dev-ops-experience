@@ -45,5 +45,5 @@ cd octane-app
 
 - Start Laravel Octane (Roadrunner)
 ```sh
-proot -b ~/.somaxconn:/proc/sys/net/core/somaxconn php artisan octane:start --server=roadrunner --host=127.0.0.1 --port=8000
+proot -b ~/.somaxconn:/proc/sys/net/core/somaxconn php artisan octane:start --server=roadrunner --host=0.0.0.0 --port=8000
 ```
