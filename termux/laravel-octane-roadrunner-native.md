@@ -47,3 +47,21 @@ cd octane-app
 ```sh
 proot -b ~/.somaxconn:/proc/sys/net/core/somaxconn php artisan octane:start --server=roadrunner --host=0.0.0.0 --port=8000
 ```
+
+> [!NOTE]  
+> - If You still have the somaxconn error the try this solution bellow.
+
+- On Your Laravel Project Directory
+```sh
+echo 128 > /tmp/somaxconn_fake_file_128
+```
+
+- Patch Roadrunner Binary
+```sh
+sed -i 's|/proc/sys/net/core/somaxconn|/tmp/somaxconn_fake_file_128|g' rr
+```
+
+- Rerun Laravel Octane
+```sh
+php artisan octane:start --server=roadrunner --host=0.0.0.0 --port=8000
+```
