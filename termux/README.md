@@ -553,87 +553,93 @@ code --no-sandbox
 sudo apt install ca-certificates
 ```
 
-- Custom Self Signed SSL Working Directory
-```sh
-mkdir ~/certs
-cd ~/certs
-```
-
 - Create local certificate authority private key
 ```sh
-openssl genrsa -des3 -out myCA.key 2048
+sudo openssl genrsa -out /etc/ssl/private/myLocalCA.key 2048
 ```
 Make private key passphrase
 
 - Create root certificate
 ```sh
-openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
+sudo openssl req -x509 -new -nodes -key /etc/ssl/private/myLocalCA.key -sha256 -days 3650 -out /etc/ssl/certs/myLocalCA.pem -subj "/C=US/ST=State/L=City/O=Local Dev/CN=My Local Root CA"
 ```
-Enter your private key passphrase and fill issuer identity questions
 
-- Copy root certificate to ca-certificates directory as .crt file
+- Create Domain Key
 ```sh
-sudo cp ~/certs/myCA.pem /usr/local/share/ca-certificates/myCA.crt
+sudo openssl genrsa -out /etc/ssl/private/local-dev.key 2048
+```
+
+- Create openssl config file
+```sh
+touch local-dev.conf
+```
+
+- Open openssl config file
+```sh
+nano local-dev.conf 
+```
+
+- Copy and paste this config
+```
+[req]
+default_bits       = 2048
+default_keyfile    = local-dev.key
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+x509_extensions    = v3_req
+prompt             = no
+
+[req_distinguished_name]
+C  = US
+ST = State
+L  = City
+O  = Local Dev
+CN = localhost.test
+
+[req_ext]
+subjectAltName = @alt_names
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost.test
+DNS.2 = *.localhost.test
+DNS.3 = yourwebsite.com
+DNS.4 = *.yourwebsite.com
+```
+
+Save and exit nano text editor : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd>.
+
+- Create Certificate Sign Request (Reuse This When Domain Updated)
+```sh
+sudo openssl req -new -key /etc/ssl/private/local-dev.key -out /tmp/local-dev.csr -config ~/local-dev.conf
+```
+
+- Sign Request with Root CA (Reuse This When Domain Updated)
+```sh
+sudo openssl x509 -req -in /tmp/local-dev.csr \
+  -CA /etc/ssl/certs/myLocalCA.pem \
+  -CAkey /etc/ssl/private/myLocalCA.key \
+  -CAcreateserial \
+  -out /etc/ssl/certs/local-dev.crt \
+  -days 1080 -sha256 \
+  -extfile ~/local-dev.conf -extensions req_ext
+```
+
+- Copy Root CA to Ubuntu System
+```sh
+sudo cp /etc/ssl/certs/myLocalCA.pem /usr/local/share/ca-certificates/myLocalCA.crt
 ```
 
 - Update certificate store
 ```sh
 sudo update-ca-certificates 
 ```
-
-- Create new bash file
+- Copy Root CA to Home then import certificate to your web browser
 ```sh
-touch generate-ssl.sh 
+cp /etc/ssl/certs/myLocalCA.pem ~/myLocalCA.pem
 ```
-
-- Open bash file
-```sh
-nano generate-ssl.sh 
-```
-
-- Copy and paste this command
-```
-######################
-# Create CA-signed certs
-######################
-
-NAME=localhost.test # Use your own domain name
-# Generate a private key
-openssl genrsa -out $NAME.key 2048
-# Create a certificate-signing request
-openssl req -new -key $NAME.key -out $NAME.csr
-# Create a config file for the extensions
->$NAME.ext cat <<-EOF
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = localhost # Be sure to include the domain name here because Common Name is not so commonly honoured by itself
-DNS.2 = localhost.test
-DNS.3 = yourwebsite.test
-DNS.4 = *.yourwebsite.test
-#IP.1 = 127.0.0.1 # Optionally, add an IP address (if the connection which you have planned requires it)
-EOF
-# Create the signed certificate
-openssl x509 -req -in $NAME.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial \
--out $NAME.crt -days 825 -sha256 -extfile $NAME.ext
-```
-Save and exit nano text editor : <kbd>Ctrl</kbd>+<kbd>X</kbd> and press <kbd>Y</kbd> then <kbd>Enter</kbd>.
-
-- Make bash file executable
-```sh
-chmod +x generate-ssl.sh 
-```
-
-- Create self signed SSL
-```sh
-./generate-ssl.sh 
-```
-
-- Rename localhost.test.crt to localhost.test.pem on home/user/certs folder
-- Copy localhost.test.pem above to etc/ssl/certs folder
-- Copy localhost.test.key from home/user/certs folder to etc/ssl/private folder
 
 # Setup Wine
 - Login As Superuser

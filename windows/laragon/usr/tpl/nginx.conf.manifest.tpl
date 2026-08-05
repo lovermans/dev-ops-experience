@@ -3,6 +3,7 @@ worker_rlimit_nofile 2048;
 
 events {
     worker_connections 1024;
+    #multi_accept on;
 }
 
 http {
