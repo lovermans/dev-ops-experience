@@ -505,24 +505,54 @@ sudo service mariadb start
 ```
 You could also put following service commands : stop, restart, reload, force-reload, status.
 
-- Secure MariaDB Server Setup
-```sh
-sudo mariadb-secure-installation
-```
-
 - Login MariaDB
 ```sh
-sudo mariadb -u root -p
+sudo mariadb
 ```
 
-- List All MariaDB User 
+- Create New User
 ```sh
-SELECT user, host, password, plugin from mysql.user;
+CREATE USER 'your_new_user'@'localhost' IDENTIFIED VIA unix_socket;
+```
+
+- Grant Access To New User
+```sh
+GRANT ALL PRIVILEGES ON *.* TO 'hamba'@'localhost' WITH GRANT OPTION;
+```
+
+- Reload Access To New User
+```sh
+FLUSH PRIVILEGES;
 ```
 
 - Logout MariaDB
 ```sh
 exit
+```
+
+- Login MariaDB Using New User
+```sh
+mariadb -u your_new_user
+```
+
+- Create Database
+```sh
+CREATE DATABASE new_database;
+```
+
+- Grant Access To Database
+```sh
+GRANT ALL PRIVILEGES ON new_database.* TO 'your_new_user'@'localhost';
+```
+
+- Reload Database Access
+```sh
+FLUSH PRIVILEGES;
+```
+
+- List All MariaDB User 
+```sh
+SELECT user, host, password, plugin from mysql.user;
 ```
 
 # Setup VSCode in Proot Distro Ubuntu
