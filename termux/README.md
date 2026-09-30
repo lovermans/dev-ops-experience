@@ -159,6 +159,13 @@ apt install sudo nano adduser
 adduser yournewusername
 ```
 
+- Give Root Access To New User 
+```sh
+usermod -aG sudo yournewusername
+```
+
+If method above failed try alternative bellow
+
 - Open User Setting 
 ```sh
 nano /etc/sudoers
@@ -337,6 +344,17 @@ chromium --no-sandbox
 - Make Chromium as Default Browser in XFCE Desktop Environment
 > Settings -> Default Applications -> Internet -> Web Browser -> Other
 > Select "chromium" and add "--no-sandbox" on the command line
+
+# Setup SSH in Proot Distro Ubuntu
+- Install Open SSH 
+```sh
+sudo apt install openssh-server
+```
+
+- Run SSH Server 
+```sh
+sudo service ssh start
+```
 
 # Setup PHP in Proot Distro Ubuntu
 - Add Latest PHP Repository
