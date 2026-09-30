@@ -22,6 +22,7 @@
   - [Fix Audio Proot Distro Ubuntu](#fix-audio-proot-distro-ubuntu)
   - [Desktop Environmet Hardware Acceleration (Mali GPU)](#desktop-environmet-hardware-acceleration-mali-gpu)
   - [Install Chromium Web Browser](#install-chromium-web-browser)
+- [Setup SSH in Proot Distro Ubuntu](#setup-ssh-in-proot-distro-ubuntu)
 - [Setup PHP in Proot Distro Ubuntu](#setup-php-in-proot-distro-ubuntu)
 - [Setup Composer in Proot Distro Ubuntu](#setup-composer-in-proot-distro-ubuntu)
 - [Setup NVM in Proot Distro Ubuntu](#setup-nvm-in-proot-distro-ubuntu)
