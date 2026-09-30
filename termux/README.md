@@ -397,7 +397,7 @@ sudo apt autoremove
 
 - Install PHP CLI & PHP FPM
 ```sh
-sudo apt install php8.4-cli php8.4-fpm
+sudo apt install php8.5-cli php8.5-fpm
 ```
 
 - Check PHP Installation
@@ -407,12 +407,12 @@ php -v
 
 - Install more PHP Extension
 ```sh
-sudo apt install php8.4-{bcmath,curl,gd,gmp,intl,mbstring,mysql,protobuf,soap,sqlite3,xml,xsl,zip}
+sudo apt install php8.5-{bcmath,curl,gd,gmp,intl,mbstring,mysql,protobuf,soap,sqlite3,xml,xsl,zip}
 ```
 
 - Run PHP-FPM
 ```sh
-sudo service php8.4-fpm start
+sudo service php8.5-fpm start
 ```
 
 # Setup Composer in Proot Distro Ubuntu
