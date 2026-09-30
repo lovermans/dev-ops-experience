@@ -15,6 +15,7 @@
   - [Termux Storage Permission Acces](#termux-storage-permission-acces)
   - [Instal Proot Distro Ubuntu](#instal-proot-distro-ubuntu)
   - [Basic User Setup Ubuntu](#basic-user-setup-ubuntu)
+  - [Configure Locale](#configure-locale)
   - [Change Timezone](#change-timezone)
   - [Install Ubuntu Desktop Environment (for remote VNC or Windows Remote Desktop)](#install-ubuntu-desktop-environment-for-remote-vnc-or-windows-remote-desktop)
     - [XFCE Desktop Environtment (lightweight \& highly customable)](#xfce-desktop-environtment-lightweight--highly-customable)
@@ -190,6 +191,22 @@ exit
 proot-distro login ubuntu --fix-low-ports --bind /dev/null:/proc/sys/kernel/cap_last_cap --shared-tmp --user yournewusername
 ``` 
 
+## Configure Locale
+- Install EN Package
+```sh
+sudo apt install -y language-pack-en
+```
+
+- Generate Locale
+```sh
+sudo locale-gen en_US.UTF-8
+```
+
+- Reconfigure Locale
+```sh
+sudo dpkg-reconfigure locales
+```
+
 ## Change Timezone
 ```sh
 sudo dpkg-reconfigure tzdata
@@ -358,7 +375,7 @@ sudo service ssh start
 ```
 
 # Setup PHP in Proot Distro Ubuntu
-- Add Latest PHP Repository
+- Add Latest PHP Repository (If You Using Ubuntu 26.04 -> Jump To Instal PHP CLI & PHP FPM Bellow)
 ```sh
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 ```
@@ -401,15 +418,18 @@ sudo service php8.4-fpm start
 # Setup Composer in Proot Distro Ubuntu
 - Download Composer
 ```sh
+cd ~
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'.PHP_EOL; } else { echo 'Installer corrupt'.PHP_EOL; unlink('composer-setup.php'); exit(1); }"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
 ```
 
 - Enable Composer Globally
 ```sh
-sudo mv composer.phar /usr/local/bin/composer
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+```
+
+- Remove Composer Installer
+```sh
+rm composer-setup.php
 ```
 
 - Check Composer Installation
